@@ -121,6 +121,7 @@ const CartPage = () => {
             price={`${formatGBP(displayTotal)} `}
             styles={`text-3xl text-center my-7  animate-bounce`}
           />
+          {/*  */}
           {/* <CustomerDetails /> */}
           <div className=' m-auto mt-5 w-3/4'>
             <CartTable cartItems={cartItems} />
