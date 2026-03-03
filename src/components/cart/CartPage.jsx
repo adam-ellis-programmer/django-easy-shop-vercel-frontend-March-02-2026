@@ -70,34 +70,34 @@ const CartPage = () => {
     )
   }
 
-  // if (!isLoggedIn && !loading) {
-  //   return (
-  //     <div className='h-[calc(100vh-150px)] flex justify-center items-center '>
-  //       <div className='p-10 border space-y-7  flex flex-col items-center border-dashed rounded-2xl w-full max-w-[400px] mx-5'>
-  //         <p className='text-2xl mt-3 capitalize animate-bounce text-red-400 text-center'>
-  //           log in to view your cart
-  //         </p>
-  //         <div className='flex space-x-3 '>
-  //           <Link
-  //             to={'/sign-in'}
-  //             className='border  p-3  rounded-lg cursor-pointer'
-  //           >
-  //             sign in
-  //           </Link>
-  //           <Link
-  //             to={'/sign-up'}
-  //             className='border  p-3  rounded-lg cursor-pointer'
-  //           >
-  //             sign up
-  //           </Link>
-  //           <Link to={'/'} className='border  p-3  rounded-lg cursor-pointer'>
-  //             home
-  //           </Link>
-  //         </div>
-  //       </div>{' '}
-  //     </div>
-  //   )
-  // }
+  if (!isLoggedIn && !loading) {
+    return (
+      <div className='h-[calc(100vh-150px)] flex justify-center items-center '>
+        <div className='p-10 border space-y-7  flex flex-col items-center border-dashed rounded-2xl w-full max-w-[400px] mx-5'>
+          <p className='text-2xl mt-3 capitalize animate-bounce text-red-400 text-center'>
+            log in to view your cart
+          </p>
+          <div className='flex space-x-3 '>
+            <Link
+              to={'/sign-in'}
+              className='border  p-3  rounded-lg cursor-pointer'
+            >
+              sign in
+            </Link>
+            <Link
+              to={'/sign-up'}
+              className='border  p-3  rounded-lg cursor-pointer'
+            >
+              sign up
+            </Link>
+            <Link to={'/'} className='border  p-3  rounded-lg cursor-pointer'>
+              home
+            </Link>
+          </div>
+        </div>{' '}
+      </div>
+    )
+  }
 
   return (
     <div className='align-element m-h'>
