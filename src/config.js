@@ -7,7 +7,7 @@ const isInDev = import.meta.env.VITE_NODE_ENV
 
 const serverUrl =
   isInDev === 'dev'
-    ? 'http://localhost:5173/api'
+    ? '/api'
     : 'https://django-easy-shop-server-railway-march-02-2026-production.up.railway.app/api'
 
 export const API_URL = serverUrl
