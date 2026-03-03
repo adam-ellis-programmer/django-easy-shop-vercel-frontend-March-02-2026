@@ -18,7 +18,7 @@ const Header = () => {
     //     ? '/admin/' // In production, they'll be on the same domain
     //     : 'http://localhost:8000/admin/'
 
-    const adminUrl = 'https://api.easy-shop.biz/admin'
+    const adminUrl = 'https://django-easy-shop-server-railway-march-02-2026-production.up.railway.app/admin/'
 
     return (
       <a href={adminUrl} target='_blank' rel='noopener noreferrer'>
@@ -47,7 +47,7 @@ const Header = () => {
                 </span>
               </div>
             </Link>
-            {/* <span>{<AdminLink />}</span> */}
+            <span>{<AdminLink />}</span>
           </div>
         ) : (
           <div className=' flex justify-end '>

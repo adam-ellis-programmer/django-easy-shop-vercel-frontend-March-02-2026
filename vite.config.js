@@ -23,18 +23,27 @@ import tailwindcss from '@tailwindcss/vite'
 //   // - Handle source maps based on environment
 // })
 
+// old target
+//   'http://django-api-prod.eba-2ff8w2hp.eu-north-1.elasticbeanstalk.com/',
+
+// const isInDev = import.meta.env.VITE_NODE_ENV
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
-        // target:
-        //   'http://django-api-prod.eba-2ff8w2hp.eu-north-1.elasticbeanstalk.com/',
-        target: 'http://127.0.0.1:8000',
+        target:
+          'https://django-easy-shop-server-railway-march-02-2026-production.up.railway.app',
         changeOrigin: true,
-        secure: false,
-        https: false,
+        secure: true,
       },
     },
   },
 })
+
+// secure: true/false
+// Controls whether the proxy verifies the SSL certificate of the target server.
+
+// secure: true   // verify the SSL cert (default) - use for real HTTPS servers
+// secure: false  // skip SSL verification - use for self-signed certs or local HTTP
