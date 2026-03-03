@@ -12,11 +12,23 @@ import { API_URL } from '../../config'
 // ==================================================================
 // fetch products public
 // ==================================================================
+// *** bug in production ***
+/**
+ *
+ *
+ */
+// function getCsrfToken() {
+//   const value = `; ${document.cookie}`
+//   const parts = value.split(`; csrftoken=`)
+//   if (parts.length === 2) return parts.pop().split(';').shift()
+//   return ''
+// }
+
 function getCsrfToken() {
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; csrftoken=`)
-  if (parts.length === 2) return parts.pop().split(';').shift()
-  return ''
+  return document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('csrftoken='))
+    ?.split('=')[1] // returns undefined if not found, not ''
 }
 
 // ==================================================================
@@ -97,7 +109,7 @@ export const loginUser = createAsyncThunk(
       }
 
       const data = await response.json()
-      console.log('LOG IN Data:',data)
+      console.log('LOG IN Data:', data)
 
       // Only store user info in localStorage, not the token
       localStorage.setItem('user', JSON.stringify(data.user))
@@ -127,11 +139,22 @@ export const logoutUser = createAsyncThunk(
     },
   ) => {
     try {
+      // ** bug in production **
+
       // Call a logout endpoint that will clear the cookie
+      // const response = await fetch(`${API_URL}/auth/logout/`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'X-CSRFToken': getCsrfToken(),
+      //   },
+      //   credentials: 'include',
+      // })
+
+      const csrfToken = getCsrfToken()
       const response = await fetch(`${API_URL}/auth/logout/`, {
         method: 'POST',
         headers: {
-          'X-CSRFToken': getCsrfToken(),
+          ...(csrfToken && { 'X-CSRFToken': csrfToken }),
         },
         credentials: 'include',
       })
