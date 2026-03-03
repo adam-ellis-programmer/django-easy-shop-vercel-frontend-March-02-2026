@@ -52,13 +52,15 @@ const getInitialState = () => {
 export const registerUser = createAsyncThunk(
   'user/register',
   async (userData, { rejectWithValue }) => {
+    const csrfToken = getCsrfToken()
     try {
       const response = await fetch(`${API_URL}/auth/register/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
+          ...(csrfToken && { 'X-CSRFToken': csrfToken }),
         },
+
         body: JSON.stringify({
           email: userData.email,
           password: userData.password,
@@ -89,12 +91,13 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
+    const csrfToken = getCsrfToken()
     try {
       const response = await fetch(`${API_URL}/auth/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
+          ...(csrfToken && { 'X-CSRFToken': csrfToken }),
         },
         body: JSON.stringify({
           email: credentials.email,
