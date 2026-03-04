@@ -23,7 +23,7 @@ import { API_URL } from '../../config'
 //   if (parts.length === 2) return parts.pop().split(';').shift()
 //   return ''
 // }
-
+// bug fix:
 function getCsrfToken() {
   return document.cookie
     .split('; ')
@@ -52,8 +52,15 @@ const getInitialState = () => {
 export const registerUser = createAsyncThunk(
   'user/register',
   async (userData, { rejectWithValue }) => {
-    const csrfToken = getCsrfToken()
     try {
+      // Step 1: get CSRF cookie first
+      await fetch(`${API_URL}/get-csrf-token/`, {
+        credentials: 'include',
+      })
+
+      // Step 2: now read it and login
+      const csrfToken = getCsrfToken()
+
       const response = await fetch(`${API_URL}/auth/register/`, {
         method: 'POST',
         headers: {
@@ -91,8 +98,15 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
-    const csrfToken = getCsrfToken()
     try {
+      // Step 1: get CSRF cookie first
+      await fetch(`${API_URL}/get-csrf-token/`, {
+        credentials: 'include',
+      })
+
+      // Step 2: now read it and login
+      const csrfToken = getCsrfToken()
+
       const response = await fetch(`${API_URL}/auth/login/`, {
         method: 'POST',
         headers: {
