@@ -118,7 +118,7 @@ export const loginUser = createAsyncThunk(
       // Step 2: now read it and login
       const csrfToken = getCsrfToken()
 
-      console.log('login token', csrfToken)
+      console.log('login token:', csrfToken)
 
       const response = await fetch(`${API_URL}/auth/login/`, {
         method: 'POST',
@@ -132,6 +132,8 @@ export const loginUser = createAsyncThunk(
         }),
         credentials: 'include',
       })
+
+      console.log('login response', response)
 
       if (!response.ok) {
         const errorData = await response.json()
