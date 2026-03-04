@@ -7,25 +7,15 @@ const useAuth = () => {
 
   const checkAuthStatus = () => {
     try {
-      // Check if user data exists in localStorage
       const userData = localStorage.getItem('user')
 
-      // Check if session cookie exists
-      const hasSessionCookie = document.cookie
-        .split(';')
-        .some((cookie) => cookie.trim().startsWith('csrftoken'))
-
-      if (userData && hasSessionCookie) {
+      if (userData) {
         const parsedUser = JSON.parse(userData)
         setUser(parsedUser)
         setIsLoggedIn(true)
       } else {
         setUser(null)
         setIsLoggedIn(false)
-        // Clean up if only one exists
-        if (userData && !hasSessionCookie) {
-          localStorage.removeItem('user')
-        }
       }
     } catch (error) {
       console.error('Error checking auth status:', error)
