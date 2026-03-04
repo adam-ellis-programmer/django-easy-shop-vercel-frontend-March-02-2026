@@ -205,6 +205,7 @@ export const logoutUser = createAsyncThunk(
         credentials: 'include',
       })
       const { csrfToken } = await csrfResponse.json()
+      console.log('Logout csrfToken', csrfToken)
 
       // Step 2: logout with token from response body
       const response = await fetch(`${API_URL}/auth/logout/`, {
