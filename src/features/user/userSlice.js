@@ -106,6 +106,20 @@ export const registerUser = createAsyncThunk(
 // ==================================================================
 // fetch products public
 // ==================================================================
+// django view has permission_classes = [AllowAny] so does not need cookie
+
+// Protected routes work — sessionid cookie is sent automatically by the browser at
+// browser level (even though JavaScript can't read it)
+
+/**
+    So the current situation is:
+
+    ✅ Login works — AllowAny bypasses CSRF check
+    ✅ User persists — checkAuthStatus fix worked
+    ✅ Protected routes work — sessionid cookie is sent automatically by the browser at browser level (even though JavaScript can't read it)
+    ❌ Logout fails — LogoutView has IsAuthenticated which does enforce CSRF
+ */
+
 export const loginUser = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
@@ -173,6 +187,8 @@ export const logoutUser = createAsyncThunk(
   async (
     _,
     {
+      // jsut de-structured data
+      // ^^^^^^^^^^^^^^^^^^^^^^^
       dispatch, // Redux dispatch function
       getState, // Function to get current Redux state
       rejectWithValue, // Function to return rejected value
@@ -184,24 +200,17 @@ export const logoutUser = createAsyncThunk(
   ) => {
     // document.cookie cannot read cross-domain cookies.
     try {
-      // ** bug in production **
+      // Step 1: get CSRF token from response body
+      const csrfResponse = await fetch(`${API_URL}/get-csrf-token/`, {
+        credentials: 'include',
+      })
+      const { csrfToken } = await csrfResponse.json()
 
-      // Call a logout endpoint that will clear the cookie
-      // const response = await fetch(`${API_URL}/auth/logout/`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'X-CSRFToken': getCsrfToken(),
-      //   },
-      //   credentials: 'include',
-      // })
-
-      const csrfToken = getCsrfToken()
-      console.log('TOKEN: ', csrfToken)
-
+      // Step 2: logout with token from response body
       const response = await fetch(`${API_URL}/auth/logout/`, {
         method: 'POST',
         headers: {
-          ...(csrfToken && { 'X-CSRFToken': csrfToken }),
+          'X-CSRFToken': csrfToken,
         },
         credentials: 'include',
       })
@@ -211,10 +220,8 @@ export const logoutUser = createAsyncThunk(
         return rejectWithValue(errorData)
       }
 
-      // Clear local storage
       localStorage.removeItem('user')
       dispatch(resetCartCount())
-
       return { success: true }
     } catch (error) {
       return rejectWithValue(error.message || 'Logout failed')
