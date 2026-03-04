@@ -168,6 +168,8 @@ export const logoutUser = createAsyncThunk(
       // })
 
       const csrfToken = getCsrfToken()
+      console.log('TOKEN: ', csrfToken)
+
       const response = await fetch(`${API_URL}/auth/logout/`, {
         method: 'POST',
         headers: {
