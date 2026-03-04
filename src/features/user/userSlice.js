@@ -205,6 +205,7 @@ export const logoutUser = createAsyncThunk(
         credentials: 'include',
       })
       const { csrfToken } = await csrfResponse.json()
+      // Masked token — 64 chars, generated fresh each time for use in headers/forms
       console.log('Logout csrfToken', csrfToken)
       console.log('csrfToken value:', csrfToken)
       console.log('csrfToken type:', typeof csrfToken)

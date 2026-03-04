@@ -56,7 +56,7 @@ const Products = () => {
         {/* filters */}
         <section className='hidden lg:block'>
           <SectionTitle text={`filters`} />
-          <PriceSlider />
+          {/* <PriceSlider /> */}
           <CategoryFilter products={reduxProducts} />
         </section>
 
