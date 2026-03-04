@@ -28,6 +28,38 @@ import tailwindcss from '@tailwindcss/vite'
 
 // const isInDev = import.meta.env.VITE_NODE_ENV
 
+// was port 8000 in dev but switched to railway
+
+/**
+     Vite proxy — it changes everything:
+    Browser thinks:
+    localhost:5173 → /api/...  (same domain request)
+                    ↓
+    Vite proxy secretly forwards to Railway behind the scenes
+                    ↓
+    Railway responds with Set-Cookie: csrftoken=...
+                    ↓
+    Vite proxy strips the railway.app domain from the cookie
+    and reissues it as a localhost cookie
+ */
+
+// he Vite proxy is essentially rewriting the cookies to be
+// localhost cookies as part of the proxying process.
+// The browser never knows the response came from railway.app — it thinks it came from localhost:5173.
+
+/**
+ * that is why we see
+ * localhost
+ * localhost
+ * localhost
+ * in cookie jar
+ *
+ * and not
+ * django-easy-shop-server-railway-march-02-2026-production.up.railway.app
+ * django-easy-shop-server-railway-march-02-2026-production.up.railway.app
+ * django-easy-shop-server-railway-march-02-2026-production.up.railway.app
+ * django-easy-shop-server-railway-march-02-2026-production.up.railway.app
+ */
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {

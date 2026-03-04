@@ -24,7 +24,18 @@ import { API_URL } from '../../config'
 //   return ''
 // }
 // bug fix:
+
+//  ❌ JavaScript on vercel.app cannot read cookies on railway.app ❌
+//  ❌ JavaScript on vercel.app cannot read cookies on railway.app ❌
+
+// That's the exact problem. The cookies are set on the Railway domain but
+// your JavaScript is running on the Vercel domain. They are completely
+// different domains so the browser's security model blocks document.cookie from seeing them.
+
+// In development both the frontend and the cookies end up on localhost so
+// JavaScript can read them fine.
 function getCsrfToken() {
+  console.log(document.cookie)
   return document.cookie
     .split('; ')
     .find((row) => row.startsWith('csrftoken='))
@@ -107,6 +118,8 @@ export const loginUser = createAsyncThunk(
       // Step 2: now read it and login
       const csrfToken = getCsrfToken()
 
+      console.log('login token', csrfToken)
+
       const response = await fetch(`${API_URL}/auth/login/`, {
         method: 'POST',
         headers: {
@@ -141,6 +154,18 @@ export const loginUser = createAsyncThunk(
 // ==================================================================
 // log out and clear cookies
 // ==================================================================
+
+// helper function at the top to fetch the CSRF token:
+// document.cookie on vercel.app cannot read cookies scoped to railway.app.
+async function fetchCsrfToken() {
+  const response = await fetch(`${API_URL}/get-csrf-token/`, {
+    credentials: 'include',
+  })
+  const data = await response.json()
+  return data.csrfToken // read from response body, not document.cookie
+}
+
+// document.cookie on vercel.app cannot read cookies scoped to railway.app.
 export const logoutUser = createAsyncThunk(
   'user/logout',
   async (
@@ -155,6 +180,7 @@ export const logoutUser = createAsyncThunk(
       extra,
     },
   ) => {
+    // document.cookie cannot read cross-domain cookies.
     try {
       // ** bug in production **
 
