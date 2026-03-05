@@ -1,25 +1,14 @@
-// src/services/updateUserService.js
-
 import axios from 'axios'
 import { API_URL } from '../config'
+import { fetchCsrfToken } from '../utils/csrfUtils' // ← import shared helper
 
-// Configure axios with cookie authentication
 const authAxios = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // IMPORTANT: This enables sending cookies with requests
+  withCredentials: true,
 })
 
-// Function to get CSRF token if needed for Django
-function getCsrfToken() {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('csrftoken='))
-    ?.split('=')[1]
-}
-
-// User service functions
 const updateUserService = {
-  // Get the current user's data
+  // GET - no CSRF needed
   getUser: async (userId) => {
     try {
       const response = await authAxios.get(`/get-user/${userId}/`)
@@ -30,30 +19,22 @@ const updateUserService = {
     }
   },
 
-  // Update the user's data
+  // POST - needs CSRF
   updateUser: async (userId, userData) => {
     try {
-      // Get CSRF token if needed
-      const csrfToken = getCsrfToken()
-
-      // Create headers object
-      const headers = {}
-      if (csrfToken) {
-        headers['X-CSRFToken'] = csrfToken
-      }
+      const csrfToken = await fetchCsrfToken() // ← get token from response body
 
       const response = await authAxios.post(
         `/update-user/${userId}/`,
         userData,
-        { headers }
+        { headers: { 'X-CSRFToken': csrfToken } },
       )
-
       return response.data
     } catch (error) {
       console.error('Error updating user data:', error)
       throw error.response ? error.response.data : error
     }
-  }
+  },
 }
 
 export default updateUserService
