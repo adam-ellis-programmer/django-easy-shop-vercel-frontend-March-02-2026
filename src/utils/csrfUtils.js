@@ -13,7 +13,7 @@ export async function fetchCsrfToken() {
   })
 
   const data = await response.json()
-  console.log('DATA FROM CSRF REQ', data)
+  // console.log('DATA FROM CSRF REQ', data)
 
   return data.csrfToken
 }

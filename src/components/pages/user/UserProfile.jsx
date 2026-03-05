@@ -76,6 +76,7 @@ const UserProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (checkTestUser()) return
+
     dispatch(
       updateUser({
         userId: currentUserId,
@@ -109,7 +110,7 @@ const UserProfile = () => {
     )
   }
 
-  console.log(loading)
+  // console.log(loading)
 
   return (
     <div className='align-element m-h'>
@@ -165,13 +166,14 @@ const UserProfile = () => {
 
                   // Check if this is a boolean field
                   const isBoolean = booleanFields.includes(key)
-
+                  // boolean is isActive!
                   return (
                     <li key={i} className=''>
                       <label
                         className='block mb-1 mt-4 capitalize'
                         htmlFor={key}
                       >
+                        {/* strip underscores and replace with spaces*/}
                         {key.replace(/_/g, ' ')}
                       </label>
 
