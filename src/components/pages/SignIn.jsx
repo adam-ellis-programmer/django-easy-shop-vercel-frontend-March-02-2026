@@ -69,11 +69,11 @@ const SignIn = () => {
       password: 'secret',
     }
     dispatch(loginUser(credentials))
-    console.log('hello and logging in....', credentials)
+    // console.log('hello and logging in....', credentials)
   }
 
-  const handleLoad = () => {
-    console.log('first')
+  const handleImageLoad = () => {
+    // console.log('first')
     setloader(false)
   }
 
@@ -104,7 +104,7 @@ const SignIn = () => {
         className='absolute top-0 left-0 w-full h-full object-cover object-center -z-10'
         src={urls[0]}
         alt='Background'
-        onLoad={handleLoad}
+        onLoad={handleImageLoad}
       />
       {/* Form Container */}
       <div className='w-full lg:pt-50 lg:pr-5'>

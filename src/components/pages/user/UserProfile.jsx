@@ -166,7 +166,7 @@ const UserProfile = () => {
 
                   // Check if this is a boolean field
                   const isBoolean = booleanFields.includes(key)
-                  // boolean is isActive!
+                  // gets one item -> boolean is isActive!
                   return (
                     <li key={i} className=''>
                       <label
@@ -207,8 +207,13 @@ const UserProfile = () => {
                 })}
             </ul>
             <div className='flex justify-end mt-5'>
-              <button type='submit' className='btn btn-dash' disabled={loading}>
-                {loading ? 'Updating...' : 'Update details'}
+              <button
+                type='submit'
+                className='btn btn-dash'
+                //  disabled={loading}
+              >
+                {/* {loading ? 'Updating...' : 'Update details'} */}
+                update details
               </button>
             </div>
           </Form>
