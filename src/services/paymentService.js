@@ -1,27 +1,17 @@
-// src/services/paymentService.js
 import axios from 'axios'
 import { API_URL } from '../config'
+import { fetchCsrfToken } from '../utils/csrfUtils'  // ← import shared helper
 
-// Configure axios with cookie authentication
 const authAxios = axios.create({
   baseURL: API_URL,
   withCredentials: true,
 })
 
-// Function to get CSRF token if needed for Django
-function getCsrfToken() {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('csrftoken='))
-    ?.split('=')[1]
-}
-
 const paymentService = {
-  // Calculate the payment total from the cart
+  // GET - no CSRF needed
   calculatePayment: async () => {
     try {
       const response = await authAxios.get('/payment/calculate/')
-      // console.log('TOTAL RESPONSE FROM SERVICE', response)
       return response.data
     } catch (error) {
       console.error('Error calculating payment:', error)
@@ -29,25 +19,16 @@ const paymentService = {
     }
   },
 
-  // Create a Stripe checkout session
+  // POST - needs CSRF
   createCheckoutSession: async () => {
     try {
-      // Get CSRF token if needed
-      const csrfToken = getCsrfToken()
-
-      // Create headers object
-      const headers = {}
-      if (csrfToken) {
-        headers['X-CSRFToken'] = csrfToken
-      }
+      const csrfToken = await fetchCsrfToken()  // ← get token from response body
 
       const response = await authAxios.post(
         '/payment/create-checkout-session/',
         {},
-        { headers }
+        { headers: { 'X-CSRFToken': csrfToken } }
       )
-
-      console.log('--------------  ran from service ----------- ')
 
       return {
         success: true,
@@ -57,14 +38,12 @@ const paymentService = {
       console.error('Error creating checkout session:', error)
       return {
         success: false,
-        error:
-          error.response?.data?.error || 'Failed to create checkout session',
+        error: error.response?.data?.error || 'Failed to create checkout session',
       }
     }
   },
 
-  // Check the status of a payment session
-  // used in return page
+  // GET - no CSRF needed
   checkSessionStatus: async (sessionId) => {
     try {
       const response = await authAxios.get(

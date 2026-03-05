@@ -1,28 +1,6 @@
-// ==================================================================
-// file imports
-// ==================================================================
-
 import axios from 'axios'
 import { API_URL } from '../config'
-
-// ==================================================================
-// Helper function to get CSRF token
-// ==================================================================
-const getCsrfToken = () => {
-  return (
-    document.cookie
-      .split(';')
-      .find((cookie) => cookie.trim().startsWith('csrftoken='))
-      ?.split('=')[1] || ''
-  )
-}
-
-// ==================================================================
-// Configure axios for CSRF handling
-// ==================================================================
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
+import { fetchCsrfToken } from '../utils/csrfUtils' // ← import shared helper
 
 // ==================================================================
 // Regular axios instance for public endpoints
@@ -32,40 +10,16 @@ const publicAxios = axios.create({
 })
 
 // ==================================================================
-// Axios instance with auth headers for protected endpoints
+// Axios instance for protected endpoints
 // ==================================================================
 const authAxios = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
 })
-
-// ==================================================================
-// interceptors get token
-// ==================================================================
-authAxios.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
-    }
-
-    // Add CSRF token to all non-GET requests
-    if (config.method !== 'get') {
-      const csrfToken = getCsrfToken()
-      if (csrfToken) {
-        config.headers['X-CSRFToken'] = csrfToken
-      }
-    }
-
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
 
 const productService = {
   // ==================================================================
-  // public get products with pagination
+  // GET - no CSRF needed
   // ==================================================================
   getPublicProducts: async ({
     page = 1,
@@ -74,29 +28,15 @@ const productService = {
   } = {}) => {
     try {
       let url = '/products/'
-
-      // Build query parameters
       const params = new URLSearchParams()
-      // =================================
-      // ------- PARAMS AND {}
-      // =================================
-
-      // Add pagination parameters
       params.append('page', page.toString())
       params.append('pageSize', pageSize.toString())
-
-      // Add category filter if provided
       if (category) {
         params.append('category', category)
       }
-
-      // Construct final URL
       if (params.toString()) {
         url += `?${params.toString()}`
       }
-
-      // console.log('Fetching products from:', url) // Debug log
-
       const response = await publicAxios.get(url)
       return response.data
     } catch (error) {
@@ -106,7 +46,7 @@ const productService = {
   },
 
   // ==================================================================
-  // public get product by id
+  // GET - no CSRF needed
   // ==================================================================
   getPublicProductById: async (productId) => {
     try {
@@ -117,48 +57,9 @@ const productService = {
       throw error.response ? error.response.data : error
     }
   },
-  // ==================================================================
-  // auth add product
-  // ==================================================================
-  addProduct: async (formData) => {
-    try {
-      const response = await authAxios.post('/add-product/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      return response.data
-    } catch (error) {
-      console.error('Error adding product:', error)
-      throw error.response ? error.response.data : error
-    }
-  },
-
-  // In productService.js
-  getCustomerProductById: async (productId) => {
-    try {
-      const response = await authAxios.get(`/customer-products/${productId}/`)
-      return response.data
-    } catch (error) {
-      console.error('Error fetching customer product details:', error)
-      throw error.response ? error.response.data : error
-    }
-  },
-
-  deleteProduct: async (productId) => {
-    try {
-      const response = await authAxios.delete(
-        `/customer-products/${productId}/delete/`
-      )
-      return response.data
-    } catch (error) {
-      console.error('Error deleting product:', error)
-      throw error.response ? error.response.data : error
-    }
-  },
 
   // ==================================================================
-  // auth get customer products
+  // GET - no CSRF needed
   // ==================================================================
   getCustomerProducts: async () => {
     try {
@@ -171,28 +72,7 @@ const productService = {
   },
 
   // ==================================================================
-  // update product information
-  // ==================================================================
-  updateProduct: async (productId, formData) => {
-    try {
-      const response = await authAxios.post(
-        `/customer-products/${productId}/update/`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
-      return response.data
-    } catch (error) {
-      console.error('Error updating product:', error)
-      throw error.response ? error.response.data : error
-    }
-  },
-
-  // ==================================================================
-  // auth get product by id to update
+  // GET - no CSRF needed
   // ==================================================================
   getCustomerProductById: async (productId) => {
     try {
@@ -205,13 +85,74 @@ const productService = {
   },
 
   // ==================================================================
-  // search bar / search prodcuts
+  // POST - needs CSRF
+  // ==================================================================
+  addProduct: async (formData) => {
+    try {
+      const csrfToken = await fetchCsrfToken() // ← get token from response body
+
+      const response = await authAxios.post('/add-product/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-CSRFToken': csrfToken,
+        },
+      })
+      return response.data
+    } catch (error) {
+      console.error('Error adding product:', error)
+      throw error.response ? error.response.data : error
+    }
+  },
+
+  // ==================================================================
+  // POST - needs CSRF
+  // ==================================================================
+  updateProduct: async (productId, formData) => {
+    try {
+      const csrfToken = await fetchCsrfToken() // ← get token from response body
+
+      const response = await authAxios.post(
+        `/customer-products/${productId}/update/`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-CSRFToken': csrfToken,
+          },
+        },
+      )
+      return response.data
+    } catch (error) {
+      console.error('Error updating product:', error)
+      throw error.response ? error.response.data : error
+    }
+  },
+
+  // ==================================================================
+  // DELETE - needs CSRF
+  // ==================================================================
+  deleteProduct: async (productId) => {
+    try {
+      const csrfToken = await fetchCsrfToken() // ← get token from response body
+
+      const response = await authAxios.delete(
+        `/customer-products/${productId}/delete/`,
+        { headers: { 'X-CSRFToken': csrfToken } },
+      )
+      return response.data
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      throw error.response ? error.response.data : error
+    }
+  },
+
+  // ==================================================================
+  // GET - no CSRF needed
   // ==================================================================
   searchProducts: async (query) => {
-    // console.log('QUERY FROM SERVICE---->', query)
     try {
       const response = await publicAxios.get(
-        `/products/search/?q=${encodeURIComponent(query)}`
+        `/products/search/?q=${encodeURIComponent(query)}`,
       )
       return response.data
     } catch (error) {

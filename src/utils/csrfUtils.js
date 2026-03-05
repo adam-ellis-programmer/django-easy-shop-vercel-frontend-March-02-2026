@@ -18,4 +18,14 @@ export async function fetchCsrfToken() {
   return data.csrfToken
 }
 
-
+// =========================
+// OLD HELPER FUNCION
+// =========================
+const getCsrfToken = () => {
+  return (
+    document.cookie
+      .split(';')
+      .find((cookie) => cookie.trim().startsWith('csrftoken='))
+      ?.split('=')[1] || ''
+  )
+}
