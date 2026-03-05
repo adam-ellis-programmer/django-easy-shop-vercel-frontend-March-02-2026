@@ -26,6 +26,10 @@ const NavBar = () => {
   const handleMobileToggle = () => {
     setIsNavOpen((prev) => !isNavOpen)
   }
+
+  console.log(loggedInUser)
+  console.log(cartItemsNumber)
+
   return (
     <nav className='h-[50px]'>
       <div className='align-element nav-container flex items-center justify-between h-full  '>
@@ -49,12 +53,15 @@ const NavBar = () => {
         <Link to='cart' className='hidden md:block'>
           <span className='relative'>
             <i className='fa-solid text-3xl fa-cart-shopping mr-7'></i>
-            {cartItemsNumber === null ? (
-              <div className=' absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
-                <div className='w-[8px] h-[8px] bg-white rounded-full animate-ping '></div>
+
+            {loggedInUser !== null && cartItemsNumber === null ? (
+              // spinner - only when logged in but cart not yet loaded
+              <div className='absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
+                <div className='w-[8px] h-[8px] bg-white rounded-full animate-ping'></div>
               </div>
             ) : (
-              <span className=' absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
+              // show count, or 0 if not logged in / cart empty
+              <span className='absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
                 {cartItemsNumber || 0}
               </span>
             )}
