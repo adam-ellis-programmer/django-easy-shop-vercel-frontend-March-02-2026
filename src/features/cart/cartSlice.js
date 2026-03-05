@@ -87,7 +87,7 @@ export const clearCart = createAsyncThunk(
 // Initial state
 const initialState = {
   items: [],
-  itemCount: 0,
+  itemCount: null,
   totalPrice: 0,
   loading: false,
   error: null,
