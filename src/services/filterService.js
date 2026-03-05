@@ -20,7 +20,7 @@ function getCsrfToken() {
 const filterService = {
   // Get products by category
   getProductsByCategory: async (category) => {
-    console.log('category from service ====>', category)
+    // console.log('category from service ====>', category)
     try {
       const response = await authAxios.get(
         `/products/filter/?q=${encodeURIComponent(category)}`,
