@@ -44,7 +44,7 @@ const Home = () => {
     return () => {}
   }, [])
 
-  console.log(document.cookie);
+  // console.log(document.cookie);
   
   const [items, setItems] = useState([])
 
