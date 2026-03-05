@@ -35,7 +35,7 @@ import { API_URL } from '../../config'
 // In development both the frontend and the cookies end up on localhost so
 // JavaScript can read them fine.
 function getCsrfToken() {
-  console.log(document.cookie)
+  // console.log(document.cookie)
   return document.cookie
     .split('; ')
     .find((row) => row.startsWith('csrftoken='))
@@ -132,7 +132,7 @@ export const loginUser = createAsyncThunk(
       // Step 2: now read it and login
       const csrfToken = getCsrfToken()
 
-      console.log('login token:', csrfToken)
+      // console.log('login token:', csrfToken)
 
       const response = await fetch(`${API_URL}/auth/login/`, {
         method: 'POST',
@@ -147,7 +147,7 @@ export const loginUser = createAsyncThunk(
         credentials: 'include',
       })
 
-      console.log('login response', response)
+      // console.log('login response', response)
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -155,7 +155,7 @@ export const loginUser = createAsyncThunk(
       }
 
       const data = await response.json()
-      console.log('LOG IN Data:', data)
+      // console.log('LOG IN Data:', data)
 
       // Only store user info in localStorage, not the token
       localStorage.setItem('user', JSON.stringify(data.user))
