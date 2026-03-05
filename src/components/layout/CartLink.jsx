@@ -24,9 +24,17 @@ const CartLink = ({ setIsNavOpen, mobile }) => {
     >
       <span className='relative'>
         <i className='fa-solid text-3xl fa-cart-shopping mr-7'></i>
-        <span className=' absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
-          {itemsCount || 0}
-        </span>
+        {loggedInUser !== null && itemsCount === null ? (
+          // spinner - only when logged in but cart not yet loaded
+          <div className='absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
+            <div className='w-[8px] h-[8px] bg-white rounded-full animate-ping'></div>
+          </div>
+        ) : (
+          // show count, or 0 if not logged in / cart empty
+          <span className='absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
+            {itemsCount || 0}
+          </span>
+        )}
       </span>
     </Link>
   )
