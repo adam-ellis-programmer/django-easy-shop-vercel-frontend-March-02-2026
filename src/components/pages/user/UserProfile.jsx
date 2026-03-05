@@ -26,6 +26,7 @@ const UserProfile = () => {
   const success = useSelector(selectUserSuccess)
   // Editable form state
   const [formData, setFormData] = useState({})
+  const [showReLoginAlert, setShowReLoginAlert] = useState(false)
 
   // List of fields that should be displayed as checkboxes
   const booleanFields = ['is_active']
@@ -79,8 +80,15 @@ const UserProfile = () => {
       updateUser({
         userId: currentUserId,
         userData: formData,
-      })
+      }),
     )
+    if (!loading) {
+      setShowReLoginAlert(true)
+
+      setTimeout(() => {
+        setShowReLoginAlert(false)
+      }, 2000)
+    }
   }
 
   // Fields to hide from the form
@@ -100,6 +108,8 @@ const UserProfile = () => {
       </div>
     )
   }
+
+  console.log(loading)
 
   return (
     <div className='align-element m-h'>
@@ -200,6 +210,12 @@ const UserProfile = () => {
               </button>
             </div>
           </Form>
+
+          {showReLoginAlert && (
+            <p className='bg-rose-500 text-white p-2 mt-4 text-end rounded-md'>
+              log out and back in to view the changes
+            </p>
+          )}
         </div>
       </section>
       <div className='w-full h-[1px] bg-amber-500 mt-5'></div>
