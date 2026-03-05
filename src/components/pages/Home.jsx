@@ -44,6 +44,8 @@ const Home = () => {
     return () => {}
   }, [])
 
+  console.log(document.cookie);
+  
   const [items, setItems] = useState([])
 
   const handleItemAdded = (newItem) => {
