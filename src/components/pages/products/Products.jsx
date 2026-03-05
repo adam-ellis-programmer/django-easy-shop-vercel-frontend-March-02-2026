@@ -40,13 +40,14 @@ const Products = () => {
       fetchPublicProducts({
         page: currentPage,
         pageSize: pageSize,
-      })
+      }),
     )
   }, [dispatch, currentPage, pageSize])
 
   // Handle page change
   const handlePageChange = (newPage) => {
-    // Update URL with new page
+    // Update URL with new page number (2,3,4, etc)
+
     navigate(`/products?page=${newPage}`)
   }
 

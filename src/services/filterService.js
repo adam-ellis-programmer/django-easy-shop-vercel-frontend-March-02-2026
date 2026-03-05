@@ -23,7 +23,7 @@ const filterService = {
     console.log('category from service ====>', category)
     try {
       const response = await authAxios.get(
-        `/products/filter/?q=${encodeURIComponent(category)}`
+        `/products/filter/?q=${encodeURIComponent(category)}`,
       )
       return response.data
     } catch (error) {

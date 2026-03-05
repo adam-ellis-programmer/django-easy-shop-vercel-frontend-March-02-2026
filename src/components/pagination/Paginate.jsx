@@ -33,7 +33,7 @@ const Paginate = ({ currentPage, totalPages, onPageChange }) => {
   }
 
   const pageNumbers = getPageNumbers()
-
+  // Pagination not on search-category page
   return (
     <div className='w-full flex items-center justify-center p-5'>
       <div className='join'>
