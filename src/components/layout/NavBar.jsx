@@ -13,7 +13,7 @@ const NavBar = () => {
   const loggedInUser = useSelector(selectUser)
 
   const cartItemsNumber = useSelector(selectCartItemCount)
-  console.log(cartItemsNumber)
+
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -27,8 +27,7 @@ const NavBar = () => {
     setIsNavOpen((prev) => !isNavOpen)
   }
 
-  console.log(loggedInUser)
-  console.log(cartItemsNumber)
+
 
   return (
     <nav className='h-[50px]'>
