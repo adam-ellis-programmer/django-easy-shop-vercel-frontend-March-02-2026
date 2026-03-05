@@ -1,24 +1,14 @@
-// src/services/bookmarkService.js
 import axios from 'axios'
 import { API_URL } from '../config'
+import { fetchCsrfToken } from '../utils/csrfUtils' // ← import shared helper
 
-// Configure axios with cookie authentication
 const authAxios = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // IMPORTANT: This enables sending cookies with requests
+  withCredentials: true,
 })
 
-// Function to get CSRF token if needed for Django
-function getCsrfToken() {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('csrftoken='))
-    ?.split('=')[1]
-}
-
-// Bookmark service functions
 const bookmarkService = {
-  // Get all bookmarks for the current user
+  // GET - no CSRF needed
   getUserBookmarks: async () => {
     try {
       const response = await authAxios.get('/bookmarks/')
@@ -29,49 +19,31 @@ const bookmarkService = {
     }
   },
 
-  // Toggle a bookmark (add if not exists, remove if exists)
+  // POST - needs CSRF
   toggleBookmark: async (productId) => {
     try {
-      // Get CSRF token if needed (for Django)
-      const csrfToken = getCsrfToken()
-
-      // Create headers object
-      const headers = {}
-      if (csrfToken) {
-        headers['X-CSRFToken'] = csrfToken
-      }
+      const csrfToken = await fetchCsrfToken() // ← get token from response body
 
       const response = await authAxios.post(
         '/bookmarks/toggle/',
-        {
-          product_id: productId,
-        },
-        { headers }
+        { product_id: productId },
+        { headers: { 'X-CSRFToken': csrfToken } },
       )
-
       return response.data
     } catch (error) {
-      console.error('Error toggling bookmark:', error.response || error)
+      console.error('Error toggling bookmark:', error)
       throw error.response ? error.response.data : error
     }
   },
 
-  // Remove a bookmark
+  // DELETE - needs CSRF
   removeBookmark: async (bookmarkId) => {
     try {
-      // Get CSRF token if needed
-      const csrfToken = getCsrfToken()
-
-      // Create headers object
-      const headers = {}
-      if (csrfToken) {
-        headers['X-CSRFToken'] = csrfToken
-      }
+      const csrfToken = await fetchCsrfToken() // ← get token from response body
 
       const response = await authAxios.delete(`/bookmarks/${bookmarkId}/`, {
-        headers,
+        headers: { 'X-CSRFToken': csrfToken },
       })
-
       return response.data
     } catch (error) {
       console.error('Error removing bookmark:', error)
