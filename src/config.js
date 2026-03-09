@@ -5,10 +5,11 @@
 
 const isInDev = import.meta.env.VITE_NODE_ENV
 
+// prettier-ignore
 const serverUrl =
   isInDev === 'dev'
     ? '/api'
-    : 'https://django-easy-shop-server-railway-march-02-2026-production.up.railway.app/api'
+    : 'https://api.easy-shop.biz/api'
 
 export const API_URL = serverUrl
 

@@ -174,6 +174,7 @@ const UserProfile = () => {
                         htmlFor={key}
                       >
                         {/* strip underscores and replace with spaces*/}
+
                         {key.replace(/_/g, ' ')}
                       </label>
 
