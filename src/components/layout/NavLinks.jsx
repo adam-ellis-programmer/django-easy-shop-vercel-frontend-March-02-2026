@@ -130,7 +130,7 @@ export const MobileNavLinks = ({ oncick }) => {
           className=' text-2xl w-full block mb-2'
           to={url}
         >
-          <div className='shadow-[1px_1px_5px_#ccc]  h-[200px] bg-[#475970] flex items-center justify-center rounded'>
+          <div className='shadow-[1px_1px_5px_#ccc]  h-[170px] bg-[#262e38] flex items-center justify-center rounded'>
             <div>
               <p className='text-white mb-5 text-center'>{text}</p>
               <i className={`fa-solid ${icon} text-5xl text-white`}></i>

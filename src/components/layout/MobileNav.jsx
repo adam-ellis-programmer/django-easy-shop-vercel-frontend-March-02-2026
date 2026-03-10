@@ -14,7 +14,7 @@ const MobileNav = ({ setIsNavOpen, isNavOpen }) => {
         isNavOpen && 'mobileOpen'
       } md:hidden px-5`}
     >
-      <div className='h-[80px] flex items-center justify-between'>
+      <div className='h-[80px] flex items-center justify-between '>
         <CartLink setIsNavOpen={setIsNavOpen} mobile />
         <img className='w-40' src={logo} alt='' />
         <button className='sm:hidden'>
@@ -29,7 +29,10 @@ const MobileNav = ({ setIsNavOpen, isNavOpen }) => {
         <div className='border h-[50px] w-[50px]'></div>
         <div className='border h-[50px] w-[50px]'></div>
       </div> */}
-      {<MobileNavLinks oncick={oncick} />}
+
+      <div className=' h-[88vh] overflow-scroll'>
+        {<MobileNavLinks oncick={oncick} />}
+      </div>
     </div>
   )
 }
