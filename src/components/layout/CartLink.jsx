@@ -14,8 +14,16 @@ const CartLink = ({ setIsNavOpen, mobile }) => {
   const itemsCount = useSelector(selectCartItemCount)
   useEffect(() => {
     if (loggedInUser) dispatch(fetchCart())
+
     return () => {}
   }, [loggedInUser])
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('darkMode')
+    // console.log(savedTheme)
+
+    return () => {}
+  }, [])
   return (
     <Link
       to='cart'
@@ -23,7 +31,7 @@ const CartLink = ({ setIsNavOpen, mobile }) => {
       className={`md:hidden ${mobile && 'mt-5'}`}
     >
       <span className='relative'>
-        <i className='fa-solid text-3xl fa-cart-shopping mr-7'></i>
+        <i className='fa-solid text-3xl text-black fa-cart-shopping mr-7'></i>
         {loggedInUser !== null && itemsCount === null ? (
           // spinner - only when logged in but cart not yet loaded
           <div className='absolute top-[-25px] right-[3px] indicator-item indicator-middle indicator-start badge badge-secondary'>
