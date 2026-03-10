@@ -133,7 +133,7 @@ export const MobileNavLinks = ({ oncick }) => {
           <div className='shadow-[1px_1px_5px_#ccc]  h-[150px] bg-[#262e38] flex items-center justify-center rounded'>
             <div>
               <p className='text-white mb-5 text-center'>{text}</p>
-              <div className='flex justify-center items-center'>
+              <div className='flex justify-center item'>
                 <i className={`fa-solid  ${icon} text-4xl text-white`}></i>
               </div>
             </div>

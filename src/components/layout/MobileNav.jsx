@@ -41,7 +41,7 @@ const MobileNav = ({ setIsNavOpen, isNavOpen }) => {
         <div className='border h-[50px] w-[50px]'></div>
       </div> */}
 
-      <div className=' h-[88vh] overflow-scroll'>
+      <div className='border h-[88vh] overflow-scroll'>
         {<MobileNavLinks oncick={oncick} />}
       </div>
     </div>
